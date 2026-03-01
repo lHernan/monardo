@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Boot - BirthdayDeploymentApplication</title>
+
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: "JetBrains Mono", monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    background: #111827;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(0,255,180,0.15);
+}
+
+h1 {
+    color: #22d3ee;
+    margin-bottom: 20px;
+}
+
+.log {
+    font-size: 13px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+}
+
+.pipeline {
+    margin-top: 20px;
+}
+
+.stage {
+    margin: 8px 0;
+}
+
+.status {
+    margin-top: 25px;
+    font-size: 20px;
+    color: #32cd32;
+    text-shadow: 0 0 10px #32cd32;
+}
+
+button {
+    margin-top: 25px;
+    background: #22d3ee;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.85;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🚀 BirthdayDeploymentApplication v3.0</h1>
+
+<div id="logs" class="log"></div>
+
+<div class="pipeline">
+    <div class="stage" id="stage1">[ ] Build</div>
+    <div class="stage" id="stage2">[ ] Test</div>
+    <div class="stage" id="stage3">[ ] Package</div>
+    <div class="stage" id="stage4">[ ] Deploy</div>
+</div>
+
+<div id="finalStatus" class="status"></div>
+
+<button onclick="deploy()">EXECUTE DEPLOYMENT</button>
+
+</div>
+
+<script>
+const logs = [
+":: Spring Boot ::  (v3.0.0.RELEASE)",
+"",
+"Starting BirthdayDeploymentApplication...",
+"Scanning components...",
+"Bean 'NuPhyAirV3' initialized.",
+"LogisticsService connected.",
+"Preparing shipment...",
+"",
+"Product assigned: NuPhy Air V3",
+"Architecture: Low Profile / High Performance",
+"RGB Module: ENABLED",
+"",
+"Status: SHIPPING_IN_PROGRESS 🚚"
+];
+
+let logIndex = 0;
+
+function typeLogs() {
+    if (logIndex < logs.length) {
+        document.getElementById("logs").innerHTML += logs[logIndex] + "\n";
+        logIndex++;
+        setTimeout(typeLogs, 400);
+    }
+}
+
+typeLogs();
+
+function deploy() {
+    const stages = ["stage1", "stage2", "stage3", "stage4"];
+    let i = 0;
+
+    function nextStage() {
+        if (i < stages.length) {
+            document.getElementById(stages[i]).innerHTML = "[✔] " + document.getElementById(stages[i]).innerText.slice(4);
+            i++;
+            setTimeout(nextStage, 600);
+        } else {
+            document.getElementById("finalStatus").innerText =
+            "🎉 DEPLOYMENT SUCCESSFUL — NuPhy Air V3 EN ROUTE";
+            playThock();
+        }
+    }
+
+    nextStage();
+}
+
+function playThock() {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "square";
+    osc.frequency.value = 120;
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    osc.stop(ctx.currentTime + 0.15);
+}
+
+// Easter egg
+document.addEventListener("keydown", function(e) {
+    if (e.key === "k") {
+        alert("⌨️ Easter Egg Activated: +∞% Thock Mode Enabled.");
+    }
+});
+</script>
+
+</body>
+</html>
