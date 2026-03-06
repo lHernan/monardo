@@ -1,904 +1,1113 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BirthdayDeploymentApplication</title>
-<meta name="description" content="A very special deployment for Monardo">
-
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-<style>
-*{ box-sizing:border-box; margin:0; padding:0; }
-
-body{
-    background:#0a0e1a;
-    color:#e2e8f0;
-    font-family:"JetBrains Mono",monospace;
-    min-height:100vh;
-    overflow-x:hidden;
-    position:relative;
-}
-
-/* Animated gradient background */
-body::before{
-    content:"";
-    position:fixed;
-    top:0;left:0;right:0;bottom:0;
-    background:
-        radial-gradient(ellipse at 20% 50%, rgba(120,40,200,0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(0,212,255,0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(255,0,128,0.06) 0%, transparent 50%);
-    z-index:0;
-    animation: bgShift 20s ease-in-out infinite alternate;
-}
-
-@keyframes bgShift {
-    0%   { opacity:0.7; }
-    50%  { opacity:1; }
-    100% { opacity:0.7; }
-}
-
-/* Floating particles */
-#particles{
-    position:fixed;
-    top:0;left:0;
-    width:100%;height:100%;
-    pointer-events:none;
-    z-index:1;
-}
-
-.particle{
-    position:absolute;
-    border-radius:50%;
-    animation: floatUp linear infinite;
-    opacity:0;
-}
-
-@keyframes floatUp{
-    0%  { transform:translateY(100vh) scale(0); opacity:0; }
-    10% { opacity:1; }
-    90% { opacity:1; }
-    100%{ transform:translateY(-10vh) scale(1); opacity:0; }
-}
-
-/* Main layout */
-.page-wrapper{
-    position:relative;
-    z-index:2;
-    padding:20px;
-    max-width:960px;
-    margin:auto;
-}
-
-/* Gift banner */
-.gift-banner{
-    text-align:center;
-    margin-bottom:24px;
-    padding:18px 24px;
-    background: linear-gradient(135deg, rgba(255,0,128,0.15), rgba(120,40,200,0.15), rgba(0,212,255,0.15));
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:16px;
-    backdrop-filter:blur(20px);
-    animation: bannerGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes bannerGlow{
-    0%  { box-shadow:0 0 20px rgba(255,0,128,0.15), 0 0 40px rgba(120,40,200,0.1); }
-    100%{ box-shadow:0 0 30px rgba(0,212,255,0.2), 0 0 60px rgba(120,40,200,0.15); }
-}
-
-.gift-banner .gift-emoji{
-    font-size:36px;
-    display:block;
-    margin-bottom:8px;
-    animation: bounce 2s ease-in-out infinite;
-}
-
-@keyframes bounce{
-    0%,100%{ transform:translateY(0); }
-    50%{ transform:translateY(-8px); }
-}
-
-.gift-banner .gift-text{
-    font-family:"Inter",sans-serif;
-    font-size:16px;
-    font-weight:600;
-    background: linear-gradient(90deg, #ff0080, #7928ca, #00d4ff, #00ff88);
-    background-size:300% 100%;
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    animation: textShimmer 4s ease-in-out infinite;
-    text-transform:uppercase;
-    letter-spacing:2px;
-}
-
-@keyframes textShimmer{
-    0%  { background-position:0% 50%; }
-    50% { background-position:100% 50%; }
-    100%{ background-position:0% 50%; }
-}
-
-/* Glass card */
-.card{
-    background: rgba(17,24,39,0.7);
-    backdrop-filter: blur(20px);
-    border:1px solid rgba(255,255,255,0.06);
-    border-radius:16px;
-    padding:24px;
-    margin-bottom:20px;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 8px 30px rgba(0,0,0,0.3);
-}
-
-.card-header{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:16px;
-    padding-bottom:12px;
-    border-bottom:1px solid rgba(255,255,255,0.06);
-}
-
-.card-header .icon{
-    font-size:20px;
-}
-
-.card-header h2{
-    font-size:14px;
-    font-weight:600;
-    color:#94a3b8;
-    text-transform:uppercase;
-    letter-spacing:1.5px;
-}
-
-/* Title */
-.main-title{
-    text-align:center;
-    margin-bottom:24px;
-}
-
-.main-title h1{
-    font-size:20px;
-    font-weight:700;
-    color:#22d3ee;
-    text-shadow:0 0 20px rgba(34,211,238,0.3);
-    margin-bottom:4px;
-}
-
-.main-title .version{
-    font-size:11px;
-    color:#64748b;
-}
-
-/* KEYBOARD */
-.keyboard-wrapper{
-    overflow-x:auto;
-    padding:4px;
-    display:flex;
-    justify-content:center;
-}
-
-.keyboard{
-    display:inline-block;
-    padding:14px;
-    border:2px solid rgba(255,255,255,0.08);
-    border-radius:14px;
-    background: linear-gradient(145deg, #0b1220, #111827);
-    box-shadow:
-        0 4px 20px rgba(0,0,0,0.4),
-        inset 0 1px 0 rgba(255,255,255,0.04);
-}
-
-.row{
-    display:flex;
-    margin-bottom:4px;
-}
-
-.key{
-    padding:5px 7px;
-    margin:2px;
-    border-radius:5px;
-    background: rgba(31,41,55,0.9);
-    font-size:9px;
-    min-width:24px;
-    text-align:center;
-    transition: all 0.2s;
-    color:rgba(255,255,255,0.85);
-    border:1px solid rgba(255,255,255,0.04);
-    cursor:pointer;
-    user-select:none;
-}
-
-.key:hover{
-    transform:translateY(-1px);
-    box-shadow:0 2px 8px rgba(34,211,238,0.2);
-}
-
-.key:active{
-    transform:translateY(1px);
-}
-
-.key.wide{ min-width:55px; }
-.key.xwide{ min-width:100px; }
-.key.space{ min-width:170px; }
-
-/* RGB wave */
-@keyframes rgbWave{
-    0%  { box-shadow:0 0 4px #ff0080, inset 0 0 4px rgba(255,0,128,0.15); }
-    25% { box-shadow:0 0 4px #7928ca, inset 0 0 4px rgba(121,40,202,0.15); }
-    50% { box-shadow:0 0 4px #00d4ff, inset 0 0 4px rgba(0,212,255,0.15); }
-    75% { box-shadow:0 0 4px #00ff88, inset 0 0 4px rgba(0,255,136,0.15); }
-    100%{ box-shadow:0 0 4px #ff0080, inset 0 0 4px rgba(255,0,128,0.15); }
-}
-
-.rgb .key{
-    animation:rgbWave 4s linear infinite;
-}
-
-.rgb .key:nth-child(1)  { animation-delay:0.00s; }
-.rgb .key:nth-child(2)  { animation-delay:0.08s; }
-.rgb .key:nth-child(3)  { animation-delay:0.16s; }
-.rgb .key:nth-child(4)  { animation-delay:0.24s; }
-.rgb .key:nth-child(5)  { animation-delay:0.32s; }
-.rgb .key:nth-child(6)  { animation-delay:0.40s; }
-.rgb .key:nth-child(7)  { animation-delay:0.48s; }
-.rgb .key:nth-child(8)  { animation-delay:0.56s; }
-.rgb .key:nth-child(9)  { animation-delay:0.64s; }
-.rgb .key:nth-child(10) { animation-delay:0.72s; }
-.rgb .key:nth-child(11) { animation-delay:0.80s; }
-.rgb .key:nth-child(12) { animation-delay:0.88s; }
-.rgb .key:nth-child(13) { animation-delay:0.96s; }
-.rgb .key:nth-child(14) { animation-delay:1.04s; }
-
-/* LOGS */
-.log{
-    font-size:12px;
-    white-space:pre-wrap;
-    line-height:1.8;
-    color:#94a3b8;
-}
-
-.log .prompt{ color:#22d3ee; }
-.log .success{ color:#22c55e; }
-.log .warning{ color:#f59e0b; }
-.log .info{ color:#a78bfa; }
-
-/* PIPELINE */
-.pipeline-grid{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:10px;
-}
-
-.stage{
-    text-align:center;
-    padding:12px 8px;
-    border-radius:10px;
-    background:rgba(255,255,255,0.03);
-    border:1px solid rgba(255,255,255,0.05);
-    font-size:12px;
-    transition: all 0.4s;
-}
-
-.stage .stage-icon{
-    font-size:22px;
-    display:block;
-    margin-bottom:6px;
-}
-
-.stage .stage-label{
-    color:#64748b;
-    font-size:11px;
-}
-
-.stage.done{
-    border-color:rgba(34,197,94,0.3);
-    background:rgba(34,197,94,0.06);
-}
-
-.stage.done .stage-label{
-    color:#22c55e;
-}
-
-/* Status */
-.status{
-    margin-top:16px;
-    font-size:16px;
-    text-align:center;
-    padding:16px;
-    border-radius:12px;
-    opacity:0;
-    transition: opacity 0.6s;
-}
-
-.status.visible{
-    opacity:1;
-    background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,211,238,0.1));
-    border:1px solid rgba(34,197,94,0.2);
-    color:#22c55e;
-    text-shadow:0 0 15px rgba(34,197,94,0.4);
-    animation: statusPulse 2s ease-in-out infinite;
-}
-
-@keyframes statusPulse{
-    0%,100%{ box-shadow:0 0 15px rgba(34,197,94,0.1); }
-    50%    { box-shadow:0 0 30px rgba(34,197,94,0.2); }
-}
-
-/* Tracking section */
-.tracking-timeline{
-    position:relative;
-    padding-left:24px;
-}
-
-.tracking-timeline::before{
-    content:"";
-    position:absolute;
-    left:7px;
-    top:4px;
-    bottom:4px;
-    width:2px;
-    background: linear-gradient(to bottom, #22d3ee, rgba(34,211,238,0.1));
-    border-radius:2px;
-}
-
-.track-event{
-    position:relative;
-    margin-bottom:14px;
-    padding:10px 14px;
-    background:rgba(255,255,255,0.02);
-    border-radius:8px;
-    border:1px solid rgba(255,255,255,0.04);
-    transition: background 0.3s;
-}
-
-.track-event:hover{
-    background:rgba(255,255,255,0.04);
-}
-
-.track-event::before{
-    content:"";
-    position:absolute;
-    left:-21px;
-    top:16px;
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:#22d3ee;
-    border:2px solid #0a0e1a;
-    box-shadow:0 0 8px rgba(34,211,238,0.4);
-}
-
-.track-event:first-child::before{
-    background:#22c55e;
-    box-shadow:0 0 8px rgba(34,197,94,0.5);
-    animation:dotPulse 2s infinite;
-}
-
-@keyframes dotPulse{
-    0%,100%{ box-shadow:0 0 8px rgba(34,197,94,0.5); }
-    50%    { box-shadow:0 0 16px rgba(34,197,94,0.8); }
-}
-
-.track-event .ev-date{
-    font-size:10px;
-    color:#64748b;
-    margin-bottom:4px;
-}
-
-.track-event .ev-desc{
-    font-size:12px;
-    color:#cbd5e1;
-}
-
-.track-event .ev-location{
-    font-size:10px;
-    color:#7928ca;
-    margin-top:2px;
-}
-
-.tracking-status-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:5px 14px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:600;
-    background:rgba(245,158,11,0.12);
-    color:#f59e0b;
-    border:1px solid rgba(245,158,11,0.2);
-    margin-bottom:14px;
-}
-
-.tracking-status-badge .pulse-dot{
-    width:6px;height:6px;
-    border-radius:50%;
-    background:#f59e0b;
-    animation: dotPulse2 1.5s infinite;
-}
-
-@keyframes dotPulse2{
-    0%,100%{ opacity:1; }
-    50%    { opacity:0.3; }
-}
-
-.track-link{
-    display:block;
-    text-align:center;
-    margin-top:14px;
-    padding:10px;
-    border-radius:8px;
-    background:rgba(34,211,238,0.08);
-    border:1px solid rgba(34,211,238,0.15);
-    color:#22d3ee;
-    text-decoration:none;
-    font-size:12px;
-    font-weight:600;
-    transition: all 0.3s;
-}
-
-.track-link:hover{
-    background:rgba(34,211,238,0.15);
-    transform:translateY(-1px);
-}
-
-/* Deploy button */
-.deploy-btn{
-    width:100%;
-    margin-top:10px;
-    padding:14px 20px;
-    border:none;
-    border-radius:10px;
-    font-family:"JetBrains Mono",monospace;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    color:#0a0e1a;
-    background: linear-gradient(135deg, #22d3ee, #00ff88);
-    box-shadow:0 4px 15px rgba(34,211,238,0.3);
-    transition: all 0.3s;
-    text-transform:uppercase;
-    letter-spacing:2px;
-}
-
-.deploy-btn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 6px 25px rgba(34,211,238,0.4);
-}
-
-.deploy-btn:active{
-    transform:translateY(0);
-    box-shadow:0 2px 10px rgba(34,211,238,0.2);
-}
-
-.deploy-btn:disabled{
-    opacity:0.5;
-    cursor:not-allowed;
-    transform:none;
-}
-
-/* Route badge */
-.route-badge{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    margin-bottom:14px;
-    font-size:13px;
-}
-
-.route-badge .flag{
-    font-size:20px;
-}
-
-.route-badge .arrow{
-    color:#64748b;
-    font-size:16px;
-    animation: arrowMove 1.5s ease-in-out infinite;
-}
-
-@keyframes arrowMove{
-    0%,100%{ transform:translateX(0); }
-    50%    { transform:translateX(4px); }
-}
-
-/* Desktop */
-@media (min-width:768px){
-    .page-wrapper{ padding:40px 20px; }
-    .main-title h1{ font-size:24px; }
-    .key{ font-size:11px; padding:6px 9px; }
-    .gift-banner .gift-text{ font-size:18px; }
-    .gift-banner .gift-emoji{ font-size:44px; }
-}
-
-@media (max-width:600px){
-    .pipeline-grid{
-        grid-template-columns:repeat(2, 1fr);
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BirthdayDeploymentApplication</title>
+    <meta name="description" content="A very special deployment for Monardo">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0a0e1a;
+            color: #e2e8f0;
+            font-family: "JetBrains Mono", monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(120, 40, 200, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(255, 0, 128, 0.06) 0%, transparent 50%);
+            z-index: 0;
+            animation: bgShift 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Floating particles */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Main layout */
+        .page-wrapper {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            max-width: 960px;
+            margin: auto;
+        }
+
+        /* Gift banner */
+        .gift-banner {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.15), rgba(120, 40, 200, 0.15), rgba(0, 212, 255, 0.15));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            animation: bannerGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes bannerGlow {
+            0% {
+                box-shadow: 0 0 20px rgba(255, 0, 128, 0.15), 0 0 40px rgba(120, 40, 200, 0.1);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(0, 212, 255, 0.2), 0 0 60px rgba(120, 40, 200, 0.15);
+            }
+        }
+
+        .gift-banner .gift-emoji {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 8px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .gift-banner .gift-text {
+            font-family: "Inter", sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #ff0080, #7928ca, #00d4ff, #00ff88);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShimmer 4s ease-in-out infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes textShimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Glass card */
+        .card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-header .icon {
+            font-size: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Title */
+        .main-title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .main-title h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #22d3ee;
+            text-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+            margin-bottom: 4px;
+        }
+
+        .main-title .version {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* KEYBOARD */
+        .keyboard-wrapper {
+            overflow-x: auto;
+            padding: 4px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .keyboard {
+            display: inline-block;
+            padding: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            background: linear-gradient(145deg, #0b1220, #111827);
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .row {
+            display: flex;
+            margin-bottom: 4px;
+        }
+
+        .key {
+            padding: 5px 7px;
+            margin: 2px;
+            border-radius: 5px;
+            background: rgba(31, 41, 55, 0.9);
+            font-size: 9px;
+            min-width: 24px;
+            text-align: center;
+            transition: all 0.2s;
+            color: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .key:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(34, 211, 238, 0.2);
+        }
+
+        .key:active {
+            transform: translateY(1px);
+        }
+
+        .key.wide {
+            min-width: 55px;
+        }
+
+        .key.xwide {
+            min-width: 100px;
+        }
+
+        .key.space {
+            min-width: 170px;
+        }
+
+        /* RGB wave */
+        @keyframes rgbWave {
+            0% {
+                box-shadow: 0 0 4px #ff0080, inset 0 0 4px rgba(255, 0, 128, 0.15);
+            }
+
+            25% {
+                box-shadow: 0 0 4px #7928ca, inset 0 0 4px rgba(121, 40, 202, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 0 4px #00d4ff, inset 0 0 4px rgba(0, 212, 255, 0.15);
+            }
+
+            75% {
+                box-shadow: 0 0 4px #00ff88, inset 0 0 4px rgba(0, 255, 136, 0.15);
+            }
+
+            100% {
+                box-shadow: 0 0 4px #ff0080, inset 0 0 4px rgba(255, 0, 128, 0.15);
+            }
+        }
+
+        .rgb .key {
+            animation: rgbWave 4s linear infinite;
+        }
+
+        .rgb .key:nth-child(1) {
+            animation-delay: 0.00s;
+        }
+
+        .rgb .key:nth-child(2) {
+            animation-delay: 0.08s;
+        }
+
+        .rgb .key:nth-child(3) {
+            animation-delay: 0.16s;
+        }
+
+        .rgb .key:nth-child(4) {
+            animation-delay: 0.24s;
+        }
+
+        .rgb .key:nth-child(5) {
+            animation-delay: 0.32s;
+        }
+
+        .rgb .key:nth-child(6) {
+            animation-delay: 0.40s;
+        }
+
+        .rgb .key:nth-child(7) {
+            animation-delay: 0.48s;
+        }
+
+        .rgb .key:nth-child(8) {
+            animation-delay: 0.56s;
+        }
+
+        .rgb .key:nth-child(9) {
+            animation-delay: 0.64s;
+        }
+
+        .rgb .key:nth-child(10) {
+            animation-delay: 0.72s;
+        }
+
+        .rgb .key:nth-child(11) {
+            animation-delay: 0.80s;
+        }
+
+        .rgb .key:nth-child(12) {
+            animation-delay: 0.88s;
+        }
+
+        .rgb .key:nth-child(13) {
+            animation-delay: 0.96s;
+        }
+
+        .rgb .key:nth-child(14) {
+            animation-delay: 1.04s;
+        }
+
+        /* LOGS */
+        .log {
+            font-size: 12px;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            color: #94a3b8;
+        }
+
+        .log .prompt {
+            color: #22d3ee;
+        }
+
+        .log .success {
+            color: #22c55e;
+        }
+
+        .log .warning {
+            color: #f59e0b;
+        }
+
+        .log .info {
+            color: #a78bfa;
+        }
+
+        /* PIPELINE */
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .stage {
+            text-align: center;
+            padding: 12px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 12px;
+            transition: all 0.4s;
+        }
+
+        .stage .stage-icon {
+            font-size: 22px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .stage .stage-label {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .stage.done {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.06);
+        }
+
+        .stage.done .stage-label {
+            color: #22c55e;
+        }
+
+        /* Status */
+        .status {
+            margin-top: 16px;
+            font-size: 16px;
+            text-align: center;
+            padding: 16px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.6s;
+        }
+
+        .status.visible {
+            opacity: 1;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 211, 238, 0.1));
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            text-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 15px rgba(34, 197, 94, 0.1);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
+            }
+        }
+
+        /* Tracking section */
+        .tracking-timeline {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .tracking-timeline::before {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 4px;
+            bottom: 4px;
+            width: 2px;
+            background: linear-gradient(to bottom, #22d3ee, rgba(34, 211, 238, 0.1));
+            border-radius: 2px;
+        }
+
+        .track-event {
+            position: relative;
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.3s;
+        }
+
+        .track-event:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .track-event::before {
+            content: "";
+            position: absolute;
+            left: -21px;
+            top: 16px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #22d3ee;
+            border: 2px solid #0a0e1a;
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.4);
+        }
+
+        .track-event:first-child::before {
+            background: #22c55e;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+            animation: dotPulse 2s infinite;
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 16px rgba(34, 197, 94, 0.8);
+            }
+        }
+
+        .track-event .ev-date {
+            font-size: 10px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .track-event .ev-desc {
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        .track-event .ev-location {
+            font-size: 10px;
+            color: #7928ca;
+            margin-top: 2px;
+        }
+
+        .tracking-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            margin-bottom: 14px;
+        }
+
+        .tracking-status-badge .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #f59e0b;
+            animation: dotPulse2 1.5s infinite;
+        }
+
+        @keyframes dotPulse2 {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .track-link {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(34, 211, 238, 0.08);
+            border: 1px solid rgba(34, 211, 238, 0.15);
+            color: #22d3ee;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .track-link:hover {
+            background: rgba(34, 211, 238, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* Deploy button */
+        .deploy-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #0a0e1a;
+            background: linear-gradient(135deg, #22d3ee, #00ff88);
+            box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .deploy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(34, 211, 238, 0.4);
+        }
+
+        .deploy-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(34, 211, 238, 0.2);
+        }
+
+        .deploy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Route badge */
+        .route-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            font-size: 13px;
+        }
+
+        .route-badge .flag {
+            font-size: 20px;
+        }
+
+        .route-badge .arrow {
+            color: #64748b;
+            font-size: 16px;
+            animation: arrowMove 1.5s ease-in-out infinite;
+        }
+
+        @keyframes arrowMove {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(4px);
+            }
+        }
+
+        /* Desktop */
+        @media (min-width:768px) {
+            .page-wrapper {
+                padding: 40px 20px;
+            }
+
+            .main-title h1 {
+                font-size: 24px;
+            }
+
+            .key {
+                font-size: 11px;
+                padding: 6px 9px;
+            }
+
+            .gift-banner .gift-text {
+                font-size: 18px;
+            }
+
+            .gift-banner .gift-emoji {
+                font-size: 44px;
+            }
+        }
+
+        @media (max-width:600px) {
+            .pipeline-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- Floating particles -->
-<div id="particles"></div>
+    <!-- Floating particles -->
+    <div id="particles"></div>
 
-<div class="page-wrapper">
+    <div class="page-wrapper">
 
-<!-- Gift banner -->
-<div class="gift-banner">
-    <span class="gift-emoji">🎁</span>
-    <span class="gift-text">Regalo de Hernán y Jacke para el Monardo</span>
-</div>
-
-<!-- Title -->
-<div class="main-title">
-    <h1>🚀 BirthdayDeploymentApplication</h1>
-    <span class="version">v3.0.0 · Build #2026.03</span>
-</div>
-
-<!-- Keyboard visualization -->
-<div class="card">
-    <div class="card-header">
-        <span class="icon">⌨️</span>
-        <h2>Hardware Preview</h2>
-    </div>
-    <div class="keyboard-wrapper">
-    <div class="keyboard rgb" id="keyboard">
-
-    <div class="row">
-    <div class="key">Esc</div>
-    <div class="key">F1</div><div class="key">F2</div><div class="key">F3</div>
-    <div class="key">F4</div><div class="key">F5</div><div class="key">F6</div>
-    <div class="key">F7</div><div class="key">F8</div><div class="key">F9</div>
-    <div class="key">F10</div><div class="key">F11</div><div class="key">F12</div>
-    </div>
-
-    <div class="row">
-    <div class="key">~</div>
-    <div class="key">1</div><div class="key">2</div><div class="key">3</div>
-    <div class="key">4</div><div class="key">5</div><div class="key">6</div>
-    <div class="key">7</div><div class="key">8</div><div class="key">9</div>
-    <div class="key">0</div><div class="key">-</div><div class="key">=</div>
-    <div class="key wide">Back</div>
-    </div>
-
-    <div class="row">
-    <div class="key wide">Tab</div>
-    <div class="key">Q</div><div class="key">W</div><div class="key">E</div>
-    <div class="key">R</div><div class="key">T</div><div class="key">Y</div>
-    <div class="key">U</div><div class="key">I</div><div class="key">O</div>
-    <div class="key">P</div><div class="key">[</div><div class="key">]</div>
-    <div class="key">\</div>
-    </div>
-
-    <div class="row">
-    <div class="key wide">Caps</div>
-    <div class="key">A</div><div class="key">S</div><div class="key">D</div>
-    <div class="key">F</div><div class="key">G</div><div class="key">H</div>
-    <div class="key">J</div><div class="key" id="kKey">K</div>
-    <div class="key">L</div><div class="key">;</div>
-    <div class="key">'</div>
-    <div class="key wide">Enter</div>
-    </div>
-
-    <div class="row">
-    <div class="key wide">Shift</div>
-    <div class="key">Z</div><div class="key">X</div><div class="key">C</div>
-    <div class="key">V</div><div class="key">B</div><div class="key">N</div>
-    <div class="key">M</div><div class="key">,</div>
-    <div class="key">.</div><div class="key">/</div>
-    <div class="key wide">Shift</div>
-    </div>
-
-    <div class="row">
-    <div class="key">Ctrl</div>
-    <div class="key">Win</div>
-    <div class="key">Alt</div>
-    <div class="key space">Space</div>
-    <div class="key">Alt</div>
-    <div class="key">Fn</div>
-    <div class="key">←</div>
-    <div class="key">↓</div>
-    <div class="key">→</div>
-    </div>
-
-    </div>
-    </div>
-</div>
-
-<!-- Deployment logs -->
-<div class="card">
-    <div class="card-header">
-        <span class="icon">📋</span>
-        <h2>Deployment Logs</h2>
-    </div>
-    <div id="logs" class="log"></div>
-</div>
-
-<!-- Pipeline -->
-<div class="card">
-    <div class="card-header">
-        <span class="icon">⚡</span>
-        <h2>CI/CD Pipeline</h2>
-    </div>
-    <div class="pipeline-grid">
-        <div class="stage" id="stage1">
-            <span class="stage-icon">🔨</span>
-            <span class="stage-label">Build</span>
+        <!-- Gift banner -->
+        <div class="gift-banner">
+            <span class="gift-emoji">🎁</span>
+            <span class="gift-text">Regalo de Hernan y Jacke para el Monardo</span>
         </div>
-        <div class="stage" id="stage2">
-            <span class="stage-icon">🧪</span>
-            <span class="stage-label">Test</span>
+
+        <!-- Title -->
+        <div class="main-title">
+            <h1>🚀 BirthdayDeploymentApplication</h1>
+            <span class="version">v3.0.0 · Build #2026.03</span>
         </div>
-        <div class="stage" id="stage3">
-            <span class="stage-icon">📦</span>
-            <span class="stage-label">Package</span>
+
+        <!-- Keyboard visualization -->
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">⌨️</span>
+                <h2>Hardware Preview</h2>
+            </div>
+            <div class="keyboard-wrapper">
+                <div class="keyboard rgb" id="keyboard">
+
+                    <div class="row">
+                        <div class="key">Esc</div>
+                        <div class="key">F1</div>
+                        <div class="key">F2</div>
+                        <div class="key">F3</div>
+                        <div class="key">F4</div>
+                        <div class="key">F5</div>
+                        <div class="key">F6</div>
+                        <div class="key">F7</div>
+                        <div class="key">F8</div>
+                        <div class="key">F9</div>
+                        <div class="key">F10</div>
+                        <div class="key">F11</div>
+                        <div class="key">F12</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="key">~</div>
+                        <div class="key">1</div>
+                        <div class="key">2</div>
+                        <div class="key">3</div>
+                        <div class="key">4</div>
+                        <div class="key">5</div>
+                        <div class="key">6</div>
+                        <div class="key">7</div>
+                        <div class="key">8</div>
+                        <div class="key">9</div>
+                        <div class="key">0</div>
+                        <div class="key">-</div>
+                        <div class="key">=</div>
+                        <div class="key wide">Back</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="key wide">Tab</div>
+                        <div class="key">Q</div>
+                        <div class="key">W</div>
+                        <div class="key">E</div>
+                        <div class="key">R</div>
+                        <div class="key">T</div>
+                        <div class="key">Y</div>
+                        <div class="key">U</div>
+                        <div class="key">I</div>
+                        <div class="key">O</div>
+                        <div class="key">P</div>
+                        <div class="key">[</div>
+                        <div class="key">]</div>
+                        <div class="key">\</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="key wide">Caps</div>
+                        <div class="key">A</div>
+                        <div class="key">S</div>
+                        <div class="key">D</div>
+                        <div class="key">F</div>
+                        <div class="key">G</div>
+                        <div class="key">H</div>
+                        <div class="key">J</div>
+                        <div class="key" id="kKey">K</div>
+                        <div class="key">L</div>
+                        <div class="key">;</div>
+                        <div class="key">'</div>
+                        <div class="key wide">Enter</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="key wide">Shift</div>
+                        <div class="key">Z</div>
+                        <div class="key">X</div>
+                        <div class="key">C</div>
+                        <div class="key">V</div>
+                        <div class="key">B</div>
+                        <div class="key">N</div>
+                        <div class="key">M</div>
+                        <div class="key">,</div>
+                        <div class="key">.</div>
+                        <div class="key">/</div>
+                        <div class="key wide">Shift</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="key">Ctrl</div>
+                        <div class="key">Win</div>
+                        <div class="key">Alt</div>
+                        <div class="key space">Space</div>
+                        <div class="key">Alt</div>
+                        <div class="key">Fn</div>
+                        <div class="key">←</div>
+                        <div class="key">↓</div>
+                        <div class="key">→</div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="stage" id="stage4">
-            <span class="stage-icon">🚀</span>
-            <span class="stage-label">Deploy</span>
+
+        <!-- Deployment logs -->
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">📋</span>
+                <h2>Deployment Logs</h2>
+            </div>
+            <div id="logs" class="log"></div>
         </div>
+
+        <!-- Pipeline -->
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">⚡</span>
+                <h2>CI/CD Pipeline</h2>
+            </div>
+            <div class="pipeline-grid">
+                <div class="stage" id="stage1">
+                    <span class="stage-icon">🔨</span>
+                    <span class="stage-label">Build</span>
+                </div>
+                <div class="stage" id="stage2">
+                    <span class="stage-icon">🧪</span>
+                    <span class="stage-label">Test</span>
+                </div>
+                <div class="stage" id="stage3">
+                    <span class="stage-icon">📦</span>
+                    <span class="stage-label">Package</span>
+                </div>
+                <div class="stage" id="stage4">
+                    <span class="stage-icon">🚀</span>
+                    <span class="stage-label">Deploy</span>
+                </div>
+            </div>
+
+            <div id="finalStatus" class="status"></div>
+
+            <button class="deploy-btn" id="deployBtn" onclick="deploy()">▶ EXECUTE DEPLOYMENT</button>
+        </div>
+
+        <!-- Tracking -->
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">📡</span>
+                <h2>Shipment Tracking</h2>
+            </div>
+
+            <div class="route-badge">
+                <span class="flag">🇨🇳</span>
+                <span style="color:#94a3b8">China</span>
+                <span class="arrow">✈ →</span>
+                <span class="flag">🇪🇸</span>
+                <span style="color:#94a3b8">España</span>
+            </div>
+
+            <div class="tracking-status-badge">
+                <span class="pulse-dot"></span>
+                En tránsito · Sin fecha estimada de entrega
+            </div>
+
+            <div class="tracking-timeline">
+                <div class="track-event">
+                    <div class="ev-date">2026-03-04 · 22:37</div>
+                    <div class="ev-desc">Arrived at the origin international airport</div>
+                    <div class="ev-location">📍 Hong Kong, HK</div>
+                </div>
+                <div class="track-event">
+                    <div class="ev-date">2026-03-04 · 20:38</div>
+                    <div class="ev-desc">Shipment is in transit to next facility</div>
+                    <div class="ev-location">📍 Yuen Long, HK</div>
+                </div>
+                <div class="track-event">
+                    <div class="ev-date">2026-03-04 · 14:25</div>
+                    <div class="ev-desc">Departed from sort facility</div>
+                    <div class="ev-location">📍 Yuen Long, HK</div>
+                </div>
+                <div class="track-event">
+                    <div class="ev-date">2026-03-04 · 11:52</div>
+                    <div class="ev-desc">Arrived at origin facility</div>
+                    <div class="ev-location">📍 Yuen Long, HK</div>
+                </div>
+                <div class="track-event">
+                    <div class="ev-date">2026-03-02 · 09:19</div>
+                    <div class="ev-desc">Shipment information received</div>
+                    <div class="ev-location">📍 Origin</div>
+                </div>
+            </div>
+
+            <a href="https://www.yuntrack.com/parcelTracking?id=YT2606100701461222" target="_blank" rel="noopener"
+                class="track-link">
+                🔗 Ver tracking completo en YunTrack
+            </a>
+        </div>
+
     </div>
 
-    <div id="finalStatus" class="status"></div>
+    <script>
+        // Floating particles
+        (function () {
+            const container = document.getElementById("particles");
+            const colors = ["#ff0080", "#7928ca", "#00d4ff", "#00ff88", "#f59e0b"];
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement("div");
+                p.className = "particle";
+                const size = Math.random() * 4 + 2;
+                p.style.width = size + "px";
+                p.style.height = size + "px";
+                p.style.left = Math.random() * 100 + "%";
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = (Math.random() * 15 + 10) + "s";
+                p.style.animationDelay = (Math.random() * 15) + "s";
+                container.appendChild(p);
+            }
+        })();
 
-    <button class="deploy-btn" id="deployBtn" onclick="deploy()">▶ EXECUTE DEPLOYMENT</button>
-</div>
+        // Deployment logs
+        const logs = [
+            { text: "", type: "" },
+            { text: ":: Spring Boot ::  (v3.0.0.RELEASE)", type: "info" },
+            { text: "", type: "" },
+            { text: "Starting BirthdayDeploymentApplication...", type: "" },
+            { text: "Scanning components...", type: "" },
+            { text: "Bean 'SurpriseGift' initialized.", type: "success" },
+            { text: "", type: "" },
+            { text: "Product: ██████████████ [CLASSIFIED]", type: "warning" },
+            { text: "Type: Mechanical Keyboard ⌨️", type: "info" },
+            { text: "RGB Engine: ENABLED 🌈", type: "success" },
+            { text: "", type: "" },
+            { text: "Status: EN TRÁNSITO 🚚 · 🇨🇳 → 🇪🇸", type: "warning" },
+            { text: "Last seen: Hong Kong International Airport", type: "" },
+            { text: "", type: "" },
+            { text: "[INFO] Gift.from = \"Hernan & Jacke\"", type: "info" },
+            { text: "[INFO] Gift.to   = \"El Monardo 🎉\"", type: "info" },
+        ];
 
-<!-- Tracking -->
-<div class="card">
-    <div class="card-header">
-        <span class="icon">📡</span>
-        <h2>Shipment Tracking</h2>
-    </div>
+        let logIndex = 0;
+        const logEl = document.getElementById("logs");
 
-    <div class="route-badge">
-        <span class="flag">🇨🇳</span>
-        <span style="color:#94a3b8">China</span>
-        <span class="arrow">✈ →</span>
-        <span class="flag">🇪🇸</span>
-        <span style="color:#94a3b8">España</span>
-    </div>
+        function typeLogs() {
+            if (logIndex < logs.length) {
+                const entry = logs[logIndex];
+                const line = document.createElement("div");
+                if (entry.text === "") {
+                    line.innerHTML = "&nbsp;";
+                } else {
+                    const prefix = document.createElement("span");
+                    prefix.className = "prompt";
+                    prefix.textContent = "> ";
+                    line.appendChild(prefix);
 
-    <div class="tracking-status-badge">
-        <span class="pulse-dot"></span>
-        En tránsito · Sin fecha estimada de entrega
-    </div>
+                    const content = document.createElement("span");
+                    if (entry.type) content.className = entry.type;
+                    content.textContent = entry.text;
+                    line.appendChild(content);
+                }
+                line.style.opacity = "0";
+                line.style.transform = "translateX(-8px)";
+                logEl.appendChild(line);
 
-    <div class="tracking-timeline">
-        <div class="track-event">
-            <div class="ev-date">2026-03-04 · 22:37</div>
-            <div class="ev-desc">Arrived at the origin international airport</div>
-            <div class="ev-location">📍 Hong Kong, HK</div>
-        </div>
-        <div class="track-event">
-            <div class="ev-date">2026-03-04 · 20:38</div>
-            <div class="ev-desc">Shipment is in transit to next facility</div>
-            <div class="ev-location">📍 Yuen Long, HK</div>
-        </div>
-        <div class="track-event">
-            <div class="ev-date">2026-03-04 · 14:25</div>
-            <div class="ev-desc">Departed from sort facility</div>
-            <div class="ev-location">📍 Yuen Long, HK</div>
-        </div>
-        <div class="track-event">
-            <div class="ev-date">2026-03-04 · 11:52</div>
-            <div class="ev-desc">Arrived at origin facility</div>
-            <div class="ev-location">📍 Yuen Long, HK</div>
-        </div>
-        <div class="track-event">
-            <div class="ev-date">2026-03-02 · 09:19</div>
-            <div class="ev-desc">Shipment information received</div>
-            <div class="ev-location">📍 Origin</div>
-        </div>
-    </div>
+                requestAnimationFrame(() => {
+                    line.style.transition = "opacity 0.3s, transform 0.3s";
+                    line.style.opacity = "1";
+                    line.style.transform = "translateX(0)";
+                });
 
-    <a href="https://www.yuntrack.com/parcelTracking?id=YT2606100701461222" target="_blank" rel="noopener" class="track-link">
-        🔗 Ver tracking completo en YunTrack
-    </a>
-</div>
-
-</div>
-
-<script>
-// Floating particles
-(function(){
-    const container=document.getElementById("particles");
-    const colors=["#ff0080","#7928ca","#00d4ff","#00ff88","#f59e0b"];
-    for(let i=0;i<30;i++){
-        const p=document.createElement("div");
-        p.className="particle";
-        const size=Math.random()*4+2;
-        p.style.width=size+"px";
-        p.style.height=size+"px";
-        p.style.left=Math.random()*100+"%";
-        p.style.background=colors[Math.floor(Math.random()*colors.length)];
-        p.style.animationDuration=(Math.random()*15+10)+"s";
-        p.style.animationDelay=(Math.random()*15)+"s";
-        container.appendChild(p);
-    }
-})();
-
-// Deployment logs
-const logs=[
-    {text:"",type:""},
-    {text:":: Spring Boot ::  (v3.0.0.RELEASE)",type:"info"},
-    {text:"",type:""},
-    {text:"Starting BirthdayDeploymentApplication...",type:""},
-    {text:"Scanning components...",type:""},
-    {text:"Bean 'SurpriseGift' initialized.",type:"success"},
-    {text:"",type:""},
-    {text:"Product: ██████████████ [CLASSIFIED]",type:"warning"},
-    {text:"Type: Mechanical Keyboard ⌨️",type:"info"},
-    {text:"RGB Engine: ENABLED 🌈",type:"success"},
-    {text:"",type:""},
-    {text:"Status: EN TRÁNSITO 🚚 · 🇨🇳 → 🇪🇸",type:"warning"},
-    {text:"Last seen: Hong Kong International Airport",type:""},
-    {text:"",type:""},
-    {text:"[INFO] Gift.from = \"Hernán & Jacke\"",type:"info"},
-    {text:"[INFO] Gift.to   = \"El Monardo 🎉\"",type:"info"},
-];
-
-let logIndex=0;
-const logEl=document.getElementById("logs");
-
-function typeLogs(){
-    if(logIndex<logs.length){
-        const entry=logs[logIndex];
-        const line=document.createElement("div");
-        if(entry.text===""){
-            line.innerHTML="&nbsp;";
-        }else{
-            const prefix=document.createElement("span");
-            prefix.className="prompt";
-            prefix.textContent="> ";
-            line.appendChild(prefix);
-
-            const content=document.createElement("span");
-            if(entry.type) content.className=entry.type;
-            content.textContent=entry.text;
-            line.appendChild(content);
+                logIndex++;
+                setTimeout(typeLogs, 280);
+            }
         }
-        line.style.opacity="0";
-        line.style.transform="translateX(-8px)";
-        logEl.appendChild(line);
+        typeLogs();
 
-        requestAnimationFrame(()=>{
-            line.style.transition="opacity 0.3s, transform 0.3s";
-            line.style.opacity="1";
-            line.style.transform="translateX(0)";
-        });
+        // Pipeline deployment
+        let deployed = false;
+        function deploy() {
+            if (deployed) return;
+            deployed = true;
+            document.getElementById("deployBtn").disabled = true;
 
-        logIndex++;
-        setTimeout(typeLogs,280);
-    }
-}
-typeLogs();
+            const stages = ["stage1", "stage2", "stage3", "stage4"];
+            let i = 0;
 
-// Pipeline deployment
-let deployed=false;
-function deploy(){
-    if(deployed) return;
-    deployed=true;
-    document.getElementById("deployBtn").disabled=true;
-
-    const stages=["stage1","stage2","stage3","stage4"];
-    let i=0;
-
-    function next(){
-        if(i<stages.length){
-            const el=document.getElementById(stages[i]);
-            el.classList.add("done");
-            el.querySelector(".stage-label").textContent="✔ "+el.querySelector(".stage-label").textContent;
-            i++;
-            setTimeout(next,600);
-        }else{
-            const status=document.getElementById("finalStatus");
-            status.innerHTML="🎉 DEPLOYMENT SUCCESSFUL<br><span style='font-size:13px;color:#94a3b8;'>Surprise package en route to Monardo</span>";
-            status.classList.add("visible");
-            playThock();
-            launchConfetti();
+            function next() {
+                if (i < stages.length) {
+                    const el = document.getElementById(stages[i]);
+                    el.classList.add("done");
+                    el.querySelector(".stage-label").textContent = "✔ " + el.querySelector(".stage-label").textContent;
+                    i++;
+                    setTimeout(next, 600);
+                } else {
+                    const status = document.getElementById("finalStatus");
+                    status.innerHTML = "🎉 DEPLOYMENT SUCCESSFUL<br><span style='font-size:13px;color:#94a3b8;'>Surprise package en route to Monardo</span>";
+                    status.classList.add("visible");
+                    playThock();
+                    launchConfetti();
+                }
+            }
+            next();
         }
-    }
-    next();
-}
 
-// Sound effect
-function playThock(){
-    try{
-        const ctx=new (window.AudioContext||window.webkitAudioContext)();
-        const osc=ctx.createOscillator();
-        const gain=ctx.createGain();
-        osc.type="square";
-        osc.frequency.value=130;
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        gain.gain.setValueAtTime(0.3,ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.15);
-        osc.stop(ctx.currentTime+0.15);
-    }catch(e){}
-}
+        // Sound effect
+        function playThock() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "square";
+                osc.frequency.value = 130;
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+                osc.stop(ctx.currentTime + 0.15);
+            } catch (e) { }
+        }
 
-// Confetti on deploy
-function launchConfetti(){
-    const colors=["#ff0080","#7928ca","#00d4ff","#00ff88","#f59e0b","#22d3ee"];
-    for(let i=0;i<60;i++){
-        const c=document.createElement("div");
-        c.style.cssText=`
+        // Confetti on deploy
+        function launchConfetti() {
+            const colors = ["#ff0080", "#7928ca", "#00d4ff", "#00ff88", "#f59e0b", "#22d3ee"];
+            for (let i = 0; i < 60; i++) {
+                const c = document.createElement("div");
+                c.style.cssText = `
             position:fixed;
-            width:${Math.random()*8+4}px;
-            height:${Math.random()*8+4}px;
-            background:${colors[Math.floor(Math.random()*colors.length)]};
-            left:${Math.random()*100}vw;
+            width:${Math.random() * 8 + 4}px;
+            height:${Math.random() * 8 + 4}px;
+            background:${colors[Math.floor(Math.random() * colors.length)]};
+            left:${Math.random() * 100}vw;
             top:-10px;
-            border-radius:${Math.random()>0.5?"50%":"2px"};
+            border-radius:${Math.random() > 0.5 ? "50%" : "2px"};
             pointer-events:none;
             z-index:9999;
-            animation:confettiFall ${Math.random()*2+2}s ease-in forwards;
-            animation-delay:${Math.random()*0.5}s;
+            animation:confettiFall ${Math.random() * 2 + 2}s ease-in forwards;
+            animation-delay:${Math.random() * 0.5}s;
         `;
-        document.body.appendChild(c);
-        setTimeout(()=>c.remove(),4000);
-    }
-}
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 4000);
+            }
+        }
 
-// Add confetti animation
-const confettiStyle=document.createElement("style");
-confettiStyle.textContent=`
+        // Add confetti animation
+        const confettiStyle = document.createElement("style");
+        confettiStyle.textContent = `
 @keyframes confettiFall{
     0%  { transform:translateY(0) rotate(0deg); opacity:1; }
-    100%{ transform:translateY(100vh) rotate(${Math.random()*720}deg); opacity:0; }
+    100%{ transform:translateY(100vh) rotate(${Math.random() * 720}deg); opacity:0; }
 }`;
-document.head.appendChild(confettiStyle);
+        document.head.appendChild(confettiStyle);
 
-// Key press easter egg
-document.addEventListener("keydown",function(e){
-    const keys=document.querySelectorAll(".key");
-    keys.forEach(k=>{
-        if(k.textContent.trim().toLowerCase()===e.key.toLowerCase()){
-            k.style.background="rgba(34,211,238,0.4)";
-            k.style.transform="translateY(2px)";
-            setTimeout(()=>{
-                k.style.background="";
-                k.style.transform="";
-            },200);
-        }
-    });
+        // Key press easter egg
+        document.addEventListener("keydown", function (e) {
+            const keys = document.querySelectorAll(".key");
+            keys.forEach(k => {
+                if (k.textContent.trim().toLowerCase() === e.key.toLowerCase()) {
+                    k.style.background = "rgba(34,211,238,0.4)";
+                    k.style.transform = "translateY(2px)";
+                    setTimeout(() => {
+                        k.style.background = "";
+                        k.style.transform = "";
+                    }, 200);
+                }
+            });
 
-    if(e.key.toLowerCase()==="k"){
-        document.getElementById("kKey").style.background="#22d3ee";
-        document.getElementById("kKey").style.color="#000";
-        playThock();
-        setTimeout(()=>{
-            document.getElementById("kKey").style.background="";
-            document.getElementById("kKey").style.color="";
-        },300);
-    }
-});
+            if (e.key.toLowerCase() === "k") {
+                document.getElementById("kKey").style.background = "#22d3ee";
+                document.getElementById("kKey").style.color = "#000";
+                playThock();
+                setTimeout(() => {
+                    document.getElementById("kKey").style.background = "";
+                    document.getElementById("kKey").style.color = "";
+                }, 300);
+            }
+        });
 
-// Physical key click on keyboard
-document.querySelectorAll(".key").forEach(key=>{
-    key.addEventListener("click",function(){
-        this.style.background="rgba(34,211,238,0.4)";
-        this.style.transform="translateY(2px)";
-        playThock();
-        setTimeout(()=>{
-            this.style.background="";
-            this.style.transform="";
-        },200);
-    });
-});
-</script>
+        // Physical key click on keyboard
+        document.querySelectorAll(".key").forEach(key => {
+            key.addEventListener("click", function () {
+                this.style.background = "rgba(34,211,238,0.4)";
+                this.style.transform = "translateY(2px)";
+                playThock();
+                setTimeout(() => {
+                    this.style.background = "";
+                    this.style.transform = "";
+                }, 200);
+            });
+        });
+    </script>
 
 </body>
+
 </html>
